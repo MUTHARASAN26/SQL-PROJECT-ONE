@@ -407,6 +407,354 @@ INSERT INTO student_fees (STUDENT_ID, FEES_AMOUNT, FEES_PAY, DUE_DATE) VALUES
 (5019, '40000', '17000', '2025-03-10'),
 (5020, '40000', '16000', '2025-03-15');
 
+# CASE STUDY STROED PRECEDURE  
+# 1)ADD STUDENT 
+DELIMITER //
+
+CREATE PROCEDURE add_student(
+   S_STUDENT_ID INT,
+   S_STUDENT_NAME VARCHAR(100),
+   S_CLASS INT,
+   S_PARENT_NAME VARCHAR(100),
+   S_PARENT_MOBILE VARCHAR(100)
+)
+BEGIN
+    INSERT INTO student (STUDENT_ID, STUDENT_NAME, CLASS, PARENT_NAME, PARENT_MOBILE)
+    VALUES (S_STUDENT_ID, S_STUDENT_NAME, S_CLASS, S_PARENT_NAME, S_PARENT_MOBILE);
+END //
+
+DELIMITER ;
+
+ # CALL THE PROCEDURE
+CALL add_student(1021, 'John Doe', 1, 'Jane Doe', '9712345678');
+
+
+
+ # 2)REMOVE STUDENT 
+
+DELIMITER //
+
+CREATE PROCEDURE remove_student(S_STUDENT_ID INT
+)
+BEGIN
+  
+    DELETE FROM student
+    WHERE STUDENT_ID = S_STUDENT_ID;
+END //
+
+DELIMITER 
+ # CALL THE PROCEDURE
+CALL remove_student(1001);
+
+
+ # 3) UPDATE STUDENT ID ANSD CLASS
+
+  DELIMITER //
+
+CREATE PROCEDURE update_student_name_class(
+     S_STUDENT_ID INT,
+     S_STUDENT_NAME VARCHAR(100),
+     S_CLASS INT
+)
+BEGIN
+     
+    UPDATE student
+    SET STUDENT_NAME = S_STUDENT_NAME,
+    CLASS = S_CLASS
+    WHERE STUDENT_ID = S_STUDENT_ID;
+END //
+
+DELIMITER ;
+
+# CALL  THE PROCEDURE
+CALL update_student_name_class(1001, 'John Smith', 3);
+
+
+ 
+ # 4) ADD EMPLOYEE
+DELIMITER //
+
+CREATE PROCEDURE add_employee(
+     E_EMPLOYEE_ID INT,
+     E_EMPLOYEE_NAME VARCHAR(100),
+     E_POSITION VARCHAR(100),
+     E_SALARY INT,
+     E_SALARY_DATE DATE,
+     E_EMPLOYEE_MOBILE VARCHAR(100)
+)
+BEGIN
+    
+    INSERT INTO employee (
+        EMPLOYEE_ID,
+        EMPLOYEE_NAME,
+        POSITION,
+        SALARY,
+        SALARY_DATE,
+        EMPLOYEE_MOBILE
+    )
+    VALUES (
+        E_EMPLOYEE_ID,
+        E_EMPLOYEE_NAME,
+        E_POSITION,
+        E_SALARY,
+        E_SALARY_DATE,
+        E_EMPLOYEE_MOBILE
+    );
+END //
+
+DELIMITER ;
+
+ # CALL  THE PROCEDURE
+ CALL add_employee(101, 'Alice Johnson', 'Administrator', 50000, '2024-08-01', '9712345678');
+
+  # 5)REMOVE EMPLOYE
+  DELIMITER //
+
+CREATE PROCEDURE remove_employee(
+    IN E_EMPLOYEE_ID INT
+)
+BEGIN
+    
+    DELETE FROM employee
+    WHERE EMPLOYEE_ID = E_EMPLOYEE_ID;
+END //
+
+DELIMITER ;
+
+ # CALL  THE PROCEDURE
+CALL remove_employee(101);
+
+  # 6) UPDATE EMPLOYEE SALARY 
+DELIMITER //
+
+CREATE PROCEDURE update_employee_salary(
+    E_EMPLOYEE_ID INT,
+    E_NEW_SALARY INT
+)
+BEGIN
+    -- Update the salary of the employee with the given EMPLOYEE_ID
+    UPDATE employee
+    SET SALARY = E_NEW_SALARY
+    WHERE EMPLOYEE_ID = E_EMPLOYEE_ID;
+END //
+
+DELIMITER ;
+
+ # CALL  THE PROCEDURE
+CALL update_employee_salary(101, 55000);
+
+ # 7) FIND STUDENT BALANCE FEES 
+
+
+DELIMITER //
+
+CREATE PROCEDURE get_student_balance(
+   F_STUDENT_ID INT)
+    
+
+BEGIN
+    
+    SELECT (FEES_AMOUNT - 
+    FEES_PAY ) AS 'BALANCE AMOUNT '
+    FROM 
+        student_fees
+    WHERE 
+        STUDENT_ID = F_STUDENT_ID;
+END //
+
+DELIMITER ;
+
+ # CALL  THE PROCEDURE
+ 
+get_student_balance(1001)
+
+
+ # 8) ADD VECHICAL 
+DELIMITER //
+
+CREATE PROCEDURE add_vehicle(
+     S_SCHOOL_BUS_ID VARCHAR(100),
+     S_SCHOOL_BUS_NUMBER VARCHAR(100),
+     S_EMPLOYEE_ID INT,
+     S_STUDENT_ID INT,
+     S_ROUTE VARCHAR(100)
+)
+BEGIN
+    
+    INSERT INTO School_Bus (
+        SCHOOL_BUS_ID,
+        SCHOOL_BUS_NUMBER,
+        EMPLOYEE_ID,
+        STUDENT_ID,
+        ROUTE
+    ) VALUES (
+        S_SCHOOL_BUS_ID,
+        S_SCHOOL_BUS_NUMBER,
+        S_EMPLOYEE_ID,
+        S_STUDENT_ID,
+        S_ROUTE
+    );
+END //
+
+DELIMITER ;
+
+ # CALL  THE PROCEDURE
+CALL add_vehicle('5A', 'TN70M1235', 116, 1001, 'NEW ROUTE');
+   
+
+ # 9)FINED BUS NUMBER ,BUS ID ,ROUTE 
+
+
+DELIMITER //
+
+CREATE PROCEDURE find_student_bus_number(
+     F_STUDENT_ID INT)
+  
+BEGIN
+SELECT *
+FROM  School_Bus
+WHERE STUDENT_ID = p_STUDENT_ID;
+END //
+
+DELIMITER ;
+
+ # CALL THE PROCEDURE
+
+CALL find_student_bus_number(1001); 
+
+
+ # 10)FIND EMPLOYEE SALARY 
+ DELIMITER //
+
+CREATE PROCEDURE find_employee_salary(
+    E_EMPLOYEE_ID INT,
+    E_SALARY INT
+)
+BEGIN
+    SELECT 
+        SALARY
+    INTO 
+        p_SALARY
+    FROM 
+        Employee
+    WHERE 
+        EMPLOYEE_ID = E_EMPLOYEE_ID;
+END //
+
+DELIMITER ;
+
+ # CALL  THE PROCEDURE
+
+CALLfind_employee_salary(101);
+
+# SIMPLE QUESTION AND ANSWER;
+ # 1) select all students
+select * from student;
+
+# 2) What are the names of all students in class 5? 
+
+SELECT STUDENT_NAME
+FROM STUDENT
+WHERE CLASS = 5;
+
+# 3)What is the mobile number of the parent of student with ID 1001? 
+
+SELECT PARENT_MOBILE
+FROM STUDENT
+WHERE STUDENT_ID = 1001;
+ 
+
+# 4) What is the total salary paid to all employees 
+
+SELECT SUM(SALARY) AS TOTAL_SALARY
+FROM Employees;
+
+
+# 5)Which school bus routes are handled by employee with ID 112 ? 
+
+SELECT ROUTE
+FROM School_Bus
+WHERE EMPLOYEE_ID = 112;
+
+# 6)What are the names and mobile numbers of employees who earn more than $30,000?
+
+SELECT EMPLOYEE_NAME, EMPLOYEE_MOBILE
+FROM Employees
+WHERE SALARY > 30000;
+  
+
+# 7)What is the fee amount due for student ID 2002?
+
+SELECT FEES_AMOUNT
+FROM student_fees
+WHERE STUDENT_ID = 2002;
+
+# 8)Which students are assigned to bus number 'TN70M2611'?
+
+SELECT s.STUDENT_NAME
+FROM STUDENT s
+JOIN School_Bus b ON s.STUDENT_ID = b.STUDENT_ID
+WHERE b.SCHOOL_BUS_NUMBER = 'TN70M2611';
+
+
+# 9)What is the due date for the fee payment of student ID 1005?
+
+SELECT DUE_DATE
+FROM student_fees
+WHERE STUDENT_ID = 1005;
+
+# 10)How many students are there in each class?
+
+SELECT CLASS, COUNT(STUDENT_ID) AS TOTAL_STUDENTS
+FROM STUDENT
+GROUP BY CLASS;
+
+# 11)What are the names and routes of all school buses?
+
+SELECT SCHOOL_BUS_NUMBER, ROUTE
+FROM School_Bus;
+
+# 12)What are the names and salaries of employees with the position 'Administrator'?
+ 
+SELECT EMPLOYEE_NAME, SALARY
+FROM Employees
+WHERE POSITION = 'Administrator';
+ 
+# 13)What is the average salary of employees?
+
+SELECT AVG(SALARY) AS AVERAGE_SALARY
+FROM Employees;
+
+# 14)What are the names and classes of students along with their assigned school bus numbers?
+
+SELECT s.STUDENT_NAME, s.CLASS, b.SCHOOL_BUS_NUMBER
+FROM STUDENT s
+JOIN School_Bus b ON s.STUDENT_ID = b.STUDENT_ID;
+
+ # 15)What are the names of employees who are assigned to the same school bus as student with ID 113?
+
+SELECT e.EMPLOYEE_NAME
+FROM Employees e
+JOIN School_Bus b ON e.EMPLOYEE_ID = b.EMPLOYEE_ID
+WHERE b.STUDENT_ID = 113;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
